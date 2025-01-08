@@ -1,7 +1,7 @@
 # Makefile for Python project
 
 # Define the virtual environment directory and requirements file
-VENV_DIR=venv
+VENV_DIR=.venv
 REQUIREMENTS=requirements.txt
 
 # Python interpreter
