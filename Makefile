@@ -18,7 +18,9 @@ $(VENV_DIR):
 install: $(VENV_DIR)
 	$(VENV_DIR)/bin/pip install --upgrade pip
 	$(VENV_DIR)/bin/pip install -r $(REQUIREMENTS)
-
+	
+run:
+	streamlit run main.py
 # Run tests with pytest
 test:
 	$(VENV_DIR)/bin/pytest
