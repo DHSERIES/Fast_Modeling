@@ -8,7 +8,7 @@ REQUIREMENTS=requirements.txt
 PYTHON=python3
 
 # Default target to create the virtual environment and install dependencies
-all: install
+all: install run
 
 # Create the virtual environment
 $(VENV_DIR):
@@ -18,9 +18,11 @@ $(VENV_DIR):
 install: $(VENV_DIR)
 	$(VENV_DIR)/bin/pip install --upgrade pip
 	$(VENV_DIR)/bin/pip install -r $(REQUIREMENTS)
-	
+
+# Run the application (e.g., Streamlit)
 run:
-	streamlit run main.py
+	$(VENV_DIR)/bin/streamlit run main.py
+
 # Run tests with pytest
 test:
 	$(VENV_DIR)/bin/pytest
@@ -28,10 +30,3 @@ test:
 # Check code style with flake8
 style:
 	$(VENV_DIR)/bin/flake8 .
-
-# Clean the virtual environment
-clean:
-	rm -rf $(VENV_DIR)
-
-# Convenience target to install, test, and check style
-check: install test style

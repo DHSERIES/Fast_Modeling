@@ -1,20 +1,7 @@
 import streamlit as st
 import pandas as pd
-import sweetviz as sv
-from streamlit_pandas_profiling import st_profile_report
 
-# Customize the sidebar
-st.sidebar.title("Machine Learning Dashboard")
-st.sidebar.markdown("### Choose an Option:")
-
-# Sidebar buttons 
-import_file = st.sidebar.button("🔽 Import File")
-process_data = st.sidebar.button("🔄 Processing Data")
-train_model = st.sidebar.button("⚙️ Model Train")
-monitor = st.sidebar.button("📊 Monitor")
-
-# Main content based on button selection
-if import_file:
+def home_page():
     st.header("Import File")
     # File uploader widget
     uploaded_file = st.file_uploader("Choose a file (CSV, Excel)", type=["csv", "xlsx"])
@@ -25,7 +12,7 @@ if import_file:
         
         # Reading and displaying the file content
         if uploaded_file.name.endswith(".csv"):
-            df = pd.read_csv(uploaded_file,index_col= None)
+            df = pd.read_csv(uploaded_file)
         elif uploaded_file.name.endswith(".xlsx"):
             df = pd.read_excel(uploaded_file, index_col= None)
         df.to_csv("source_data.csv",index = None)
@@ -39,16 +26,21 @@ if import_file:
         if profile_button: 
             st.title("Exploratory Data Analysis")
 
+def about_page():
+    st.title("About Page")
+    st.write("This is the About Page. Learn more about the application here.")
 
+def contact_page():
+    st.title("Contact Page")
+    st.write("This is the contact page. Get in touch with us!")
 
-if process_data:
-    st.header("Processing Data")
-    st.write("Here you can process and clean your data.")
+# Create sidebar navigation
+page = st.sidebar.selectbox("Select a Page", ["Home", "About", "Contact"])
 
-if train_model:
-    st.header("Model Training")
-    st.write("Here you can train your machine learning model.")
-
-if monitor:
-    st.header("Monitor")
-    st.write("Here you can monitor model performance or other metrics.")
+# Conditional rendering based on the page selected
+if page == "Home":
+    home_page()
+elif page == "About":
+    about_page()
+elif page == "Contact":
+    contact_page()
