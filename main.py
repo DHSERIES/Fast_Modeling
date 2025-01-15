@@ -12,7 +12,7 @@ def home_page():
         
         # Reading and displaying the file content
         if uploaded_file.name.endswith(".csv"):
-            df = pd.read_csv(uploaded_file)
+            df = pd.read_csv(uploaded_file,index_col= None)
         elif uploaded_file.name.endswith(".xlsx"):
             df = pd.read_excel(uploaded_file, index_col= None)
         df.to_csv("source_data.csv",index = None)
@@ -20,12 +20,16 @@ def home_page():
         st.write("Preview of the dataset:")
         st.dataframe(df.head())
 
-        profile_button = st.button("Generate Report")
- 
+        st.session_state.df = df
+        
+        st.write("File successfully uploaded!")
+        
+        # Show a preview of the dataset
+        st.write("Preview of the dataset:")
+        st.dataframe(df.head())
 
-        if profile_button: 
-            st.title("Exploratory Data Analysis")
 
+            
 def about_page():
     st.title("About Page")
     st.write("This is the About Page. Learn more about the application here.")
