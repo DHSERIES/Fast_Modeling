@@ -12,6 +12,8 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import plotly.figure_factory as ff
 
+from eda import EDA
+from preprocessing import PREPROCESSING
 
 def home_page():
     st.header("Import File")
@@ -34,141 +36,12 @@ def home_page():
         # Display the DataFrame
         st.write(df)
         st.dataframe(df.head())
+def preprocessing():
+    PREPROCESSING()
 
-            
-def EDA():
-    options = ["iris_example.csv"]  # default dataset
-    if "all_dataset" in st.session_state:
-        options.append("Uploaded dataset")
+def prep():
+    EDA()
 
-    # Create a selectbox to choose the dataset
-    option = st.selectbox(
-        "Select dataset:",
-        options
-    )
-    
-    st.write("You selected:", option)
-    df = pd.read_csv(f"{option}")
-    st.write(option)
-    st.dataframe(df.head())
-    # Display basic dataset info
-    st.subheader("Basic Information")
-    st.write(f"Shape of the dataset: {df.shape}")
-    st.write(f"Columns in the dataset: {df.columns}")
-    st.write(f"Missing values per column:\n{df.isnull().sum()}")
-    
-    # Display descriptive statistics
-    st.subheader("Descriptive Statistics")
-    st.write(df.describe())
-    
-    # Histograms for numerical columns
-    st.subheader("Histograms for Numerical Features")
-    num_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-    for col in num_cols:
-        st.write(f"Histogram for {col}")
-        fig, ax = plt.subplots()
-        sns.histplot(df[col], kde=True, ax=ax)
-        st.pyplot(fig)
-    
-    # Correlation heatmap
-    st.subheader("Correlation Heatmap")
-    correlation_matrix = df.corr()
-    fig, ax = plt.subplots(figsize=(10, 8))
-    sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", ax=ax)
-    st.pyplot(fig)
-    
-    # Boxplot for detecting outliers
-    st.subheader("Boxplots for Outlier Detection")
-    for col in num_cols:
-        st.write(f"Boxplot for {col}")
-        fig, ax = plt.subplots()
-        sns.boxplot(x=df[col], ax=ax)
-        st.pyplot(fig)
-    
-    # Pairplot for feature relationships (if dataset is small)
-    st.subheader("Pairplot of Features")
-    if len(df) <= 500:  # Avoiding too large pairplot
-        st.write("Pairplot (first 500 rows)")
-        sns.pairplot(df)
-        st.pyplot()
-    else:
-        st.write("Dataset too large for pairplot. Displaying first 500 rows pairplot.")
-        sns.pairplot(df.head(500))
-        st.pyplot()
-    
-    # Plotting a feature distribution with Plotly for interactivity
-    st.subheader("Interactive Feature Distribution")
-    feature = st.selectbox("Select feature for interactive plot", num_cols)
-    if feature:
-        fig = px.histogram(df, x=feature, nbins=20, title=f"Distribution of {feature}")
-        st.plotly_chart(fig)
-
-def contact_page():
-    data = pd.read_csv("iris_example.csv")
-
-    st.title("Exploratory Data Analysis (EDA) Dashboard")
-
-    # Sidebar for plot selection
-    plot_option = st.sidebar.selectbox("Choose a plot type", ["Histogram", "Boxplot", "Scatter Plot", "Heatmap"])
-
-    # Sidebar for conditions based on the plot
-    condition_column = None
-    hue = None
-    x_axis = None
-    y_axis = None
-    bins = None
-
-    if plot_option == "Histogram":
-        condition_column = st.sidebar.selectbox("Select column for histogram", data.select_dtypes(include=['float64', 'int64']).columns)
-        bins = st.sidebar.slider("Select number of bins", min_value=5, max_value=50, value=20)
-
-    elif plot_option == "Boxplot":
-        condition_column = st.sidebar.selectbox("Select column for boxplot", data.select_dtypes(include=['float64', 'int64']).columns)
-        hue = st.sidebar.selectbox("Select hue for boxplot", ["None"] + list(data.select_dtypes(include=['object']).columns))
-
-    elif plot_option == "Scatter Plot":
-        x_axis = st.sidebar.selectbox("Select X-axis", data.select_dtypes(include=['float64', 'int64']).columns)
-        y_axis = st.sidebar.selectbox("Select Y-axis", data.select_dtypes(include=['float64', 'int64']).columns)
-        hue = st.sidebar.selectbox("Select hue for scatter plot", ["None"] + list(data.select_dtypes(include=['object']).columns))
-
-    elif plot_option == "Heatmap":
-        corr_matrix = data.corr()  # Calculate correlation matrix
-        heatmap_column = st.sidebar.selectbox("Select column for heatmap", corr_matrix.columns)
-
-    # Button to generate the plot
-    generate_button = st.sidebar.button("Generate Plot")
-
-    if generate_button:
-        # Plotting based on the selected options
-        if plot_option == "Histogram":
-            fig, ax = plt.subplots()
-            ax.hist(data[condition_column], bins=bins)
-            ax.set_title(f"Histogram of {condition_column}")
-            st.pyplot(fig)
-
-        elif plot_option == "Boxplot":
-            fig, ax = plt.subplots()
-            if hue == "None":
-                sns.boxplot(x=data[condition_column], ax=ax)
-            else:
-                sns.boxplot(x=data[condition_column], hue=data[hue], ax=ax)
-            ax.set_title(f"Boxplot of {condition_column}")
-            st.pyplot(fig)
-
-        elif plot_option == "Scatter Plot":
-            fig, ax = plt.subplots()
-            if hue == "None":
-                sns.scatterplot(x=data[x_axis], y=data[y_axis], ax=ax)
-            else:
-                sns.scatterplot(x=data[x_axis], y=data[y_axis], hue=data[hue], ax=ax)
-            ax.set_title(f"Scatter Plot of {x_axis} vs {y_axis}")
-            st.pyplot(fig)
-
-        elif plot_option == "Heatmap":
-            fig, ax = plt.subplots()
-            sns.heatmap(data.corr(), annot=True, cmap="coolwarm", ax=ax)
-            ax.set_title("Correlation Heatmap")
-            st.pyplot(fig)
 
 def train():
 
@@ -267,12 +140,12 @@ def train():
 
     # Additional visualization using Plotly (e.g., ROC Curve, etc.) can also be added here if needed.
 # Create sidebar navigation
-page = st.sidebar.selectbox("Select a Page", ["Home", "About", "Contact"])
+page = st.sidebar.selectbox("Select a Page", ["Home", "preprocess","EDA", "Contact"])
 
 # Conditional rendering based on the page selected
 if page == "Home":
     home_page()
-elif page == "About":
-    EDA()
-elif page == "Contact":
-    contact_page()
+elif page == "preprocess":
+    preprocessing()
+elif page == "EDA":
+    prep()
