@@ -1,5 +1,5 @@
-1. Data Preprocessing
-Numerical Data: Normalize or standardize (e.g., Min-Max scaling, Z-score normalization).
+1. Data Preprocessing	
+Numerical Data: Normalize or standardize (e.g., Min-Max scaling, Z-score normalization).	
 Categorical Data: Encode properly (e.g., one-hot encoding, label encoding, or embeddings for high-cardinality categories).
 Missing Data Handling: Use imputation techniques for missing values.
 2. Exploratory Data Analysis (EDA)
