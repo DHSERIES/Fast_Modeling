@@ -3,25 +3,46 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
 
-def home_page():
-    st.header("Import File")
-    # File uploader widget
-    uploaded_file = st.file_uploader("Choose a file (CSV, Excel)", type=["csv", "xlsx"])
+DATA_DIR = "data/"
 
-    if uploaded_file is not None:
-        # Display the file name
-        st.write(f"File uploaded: {uploaded_file.name}")
-        
-        # Read and display the file content
-        if uploaded_file.name.endswith(".csv"):
-            df = pd.read_csv(uploaded_file)
-        elif uploaded_file.name.endswith(".xlsx"):
-            df = pd.read_excel(uploaded_file)
-        
-        # Store the uploaded file in session state if needed
-        st.session_state.uploaded_file = uploaded_file
+st.header("Import File")
+# File uploader widget
+uploaded_file = st.file_uploader("Choose a file (CSV, Excel)", type=["csv", "xlsx"])
 
-        # Display the DataFrame
-        st.write(df)
-        st.dataframe(df.head())
+dataset_files = {
+    f: os.path.join(DATA_DIR, f)
+    for f in os.listdir(DATA_DIR)
+}
+if uploaded_file is not None:
+    # Display the file name
+    st.write(f"File uploaded: {uploaded_file.name}")
+    
+    # Read and display the file content
+
+    if uploaded_file.name.endswith(".csv"):
+        df = pd.read_csv(uploaded_file)
+    elif uploaded_file.name.endswith(".xlsx"):
+        df = pd.read_excel(uploaded_file)
+    else:
+        raise TypeError("File unreadble")
+    
+    file_path = os.path.join(DATA_DIR, uploaded_file.name)
+    with open(file_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+    dataset_files = {
+        f: os.path.join(DATA_DIR, f)
+        for f in os.listdir(DATA_DIR)
+    }
+    st.success(f"Imported dataset saved to {file_path}")
+
+
+# Create a drop-down list for dataset selection
+selected_dataset = st.selectbox("Choose a dataset", list(dataset_files.keys()))
+
+if st.button("Select Dataset"):
+    # Read the selected dataset
+    df = pd.read_csv(dataset_files[selected_dataset])
+    st.write(f"Displaying the {selected_dataset}:")
+    st.dataframe(df)
