@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-import preprocessing
+from preprocessing import display_preprocessing_steps
 DATA_DIR = "data/"
 st.session_state["selected_table"] = pd.read_csv('data/iris_example.csv')
 
@@ -46,8 +46,6 @@ if st.button("Select Dataset"):
     df = pd.read_csv(dataset_files[selected_dataset])
     st.write(f"Displaying the {selected_dataset}:")
     st.dataframe(df)
-
-    st.session_state["selected_table"] = df
-
-    preprocessing.app(df)
+    copy = df
+    display_preprocessing_steps(copy)
 
