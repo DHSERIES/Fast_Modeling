@@ -4,8 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-
+import preprocessing
 DATA_DIR = "data/"
+st.session_state["selected_table"] = pd.read_csv('data/iris_example.csv')
 
 st.header("Import File")
 # File uploader widget
@@ -37,7 +38,6 @@ if uploaded_file is not None:
     }
     st.success(f"Imported dataset saved to {file_path}")
 
-
 # Create a drop-down list for dataset selection
 selected_dataset = st.selectbox("Choose a dataset", list(dataset_files.keys()))
 
@@ -46,3 +46,8 @@ if st.button("Select Dataset"):
     df = pd.read_csv(dataset_files[selected_dataset])
     st.write(f"Displaying the {selected_dataset}:")
     st.dataframe(df)
+
+    st.session_state["selected_table"] = df
+
+    preprocessing.app(df)
+
