@@ -1,10 +1,6 @@
 import streamlit as st
 import pandas as pd
 
-def load_data(file):
-    """Load CSV file into a DataFrame."""
-    df = pd.read_csv(file)
-    return df
 
 def display_preprocessing_steps(df):
     """Display fast analysis including info, missing values, and skewness."""

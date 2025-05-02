@@ -1,8 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 import os
 def read_dataset(dataset_choice):
     if dataset_choice != "-- Select a dataset --":
