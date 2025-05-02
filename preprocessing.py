@@ -25,4 +25,5 @@ def display_preprocessing_steps(df):
         st.write("**Skewness (Numeric Columns):**")
         skewness = df[numeric_cols].skew().to_frame(name='Skewness')
         st.dataframe(skewness)
+    
 
