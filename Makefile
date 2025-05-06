@@ -7,8 +7,6 @@ REQUIREMENTS=requirements.txt
 # Python interpreter
 PYTHON=python3
 
-# Default target to create the virtual environment and install dependencies
-all: install run
 
 # Create the virtual environment
 $(VENV_DIR):
@@ -23,10 +21,10 @@ install: $(VENV_DIR)
 run:
 	$(VENV_DIR)/bin/streamlit run main.py
 
-# Run tests with pytest
-test:
-	$(VENV_DIR)/bin/pytest
+create_dirs:
+	@mkdir -p data report
+	@echo "Directories and beginner main file created."
 
-# Check code style with flake8
-style:
-	$(VENV_DIR)/bin/flake8 .
+
+# Default target to create the virtual environment and install dependencies
+all: install create_dirs run
