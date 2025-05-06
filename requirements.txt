@@ -1,4 +1,6 @@
 streamlit
+numpy
 matplotlib
 seaborn
 sweetviz
+setuptools
