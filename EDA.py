@@ -3,23 +3,31 @@ import streamlit as st
 import pandas as pd
 import os
 from ydata_profiling import ProfileReport
-from streamlit_pandas_profiling import st_profile_report
+import streamlit.components.v1 as components
+from ImportData import show_import_data
 
-REPORT_DIR = "report/"
-
-@st.cache_data
 def show_eda():
-    st.title("📊 EDA with Sweetviz")
+    st.title("📊 Full‑Page EDA Report")
 
+    # get the uploaded or selected dataset path
     path = st.session_state.get("dataset_path", None)
     if not path:
         st.warning("Please upload or select a dataset on the Home / Import Data page first.")
-        return
+        return show_import_data()
 
+    # show a small preview
     df = pd.read_csv(path)
-    st.write("Preview:", df.head())
+    st.write("Preview of your data:", df.head(3))
 
-    if st.button("Generate Profiling Report"):
-        with st.spinner("Generating..."):
+    # when clicked, generate & embed the full report
+    if st.button("Generate Full‑Page Profiling Report"):
+        with st.spinner("Generating profiling report…"):
             pr = ProfileReport(df, explorative=True)
-            st_profile_report(pr)
+
+            # 2) convert to HTML and embed as a full‑page scrollable component
+            html = pr.to_html()
+            components.html(
+                html,
+                height=st.session_state.get("report_height", 1000), 
+                scrolling=True,
+            )
