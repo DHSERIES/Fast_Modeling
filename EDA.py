@@ -4,16 +4,18 @@ import pandas as pd
 import os
 from ydata_profiling import ProfileReport
 import streamlit.components.v1 as components
-from ImportData import show_import_data
 
+
+st.set_page_config(page_title="Gallery Page", page_icon=":camera:")
 def show_eda():
     st.title("📊 Full‑Page EDA Report")
 
     # get the uploaded or selected dataset path
     path = st.session_state.get("dataset_path", None)
-    if not path:
+    
+    if not path or not os.path.exists(path):
         st.warning("Please upload or select a dataset on the Home / Import Data page first.")
-        return show_import_data()
+        st.stop()
 
     # show a small preview
     df = pd.read_csv(path)

@@ -5,6 +5,7 @@ import os
 
 DATA_DIR = "data/"
 
+
 def show_import_data():
     st.title("📥 Import Data")
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
@@ -30,3 +31,16 @@ def show_import_data():
         st.success(f"Selected `{choice}`")
         df = pd.read_csv(path)
         st.write(df.head())
+        rows, cols = df.shape
+        missing = df.isna().mean().mean() * 100
+        num_numeric = len(df.select_dtypes(include="number").columns)
+        num_categorical = len(df.select_dtypes(exclude="number").columns)
+    else:
+        rows = cols = num_numeric = num_categorical = 0
+        missing = 0.0
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Rows", rows)
+    c2.metric("Columns", cols)
+    c3.metric("Missing %", f"{missing:.1f}%")
+    c4.metric("Numeric / Cat.", f"{num_numeric} / {num_categorical}")
