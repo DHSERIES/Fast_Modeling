@@ -14,7 +14,7 @@ $(VENV_DIR):
 
 # Install dependencies from requirements.txt
 install: $(VENV_DIR)
-	$(VENV_DIR)/bin/pip install --upgrade pip
+	$(VENV_DIR)/bin/pip install --upgrade pip setuptools
 	$(VENV_DIR)/bin/pip install -r $(REQUIREMENTS)
 
 # Run the application (e.g., Streamlit)
